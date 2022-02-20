@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
-ready="n"
-while [ "$ready" == "n" ]; do
-  if  kubectl get pods -n kube-system|grep kube-scheduler|grep -qi "1/1" ; then
-    ready='y'
-  else
-    sleep 1
-  fi
+schedulerPod="$(kubectl get pods -n kube-system|grep kube-scheduler|awk '{print $1}')"
+
+while [[ "$(kubectl get pod -n kube-system $schedulerPod -o 'jsonpath={..status.conditions[?(@.type=="Ready")].status}')" != "True" ]]; do
+ sleep 1
 done
-kubectl get pods >/tmp/afterpods
+
 if [ -f "/hooks/after_ready.sh" ]; then
   bash /hooks/after_ready.sh
 fi
