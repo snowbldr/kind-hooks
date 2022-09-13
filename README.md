@@ -14,6 +14,10 @@ The following hooks are supported:
 ### Postgres example
 In this example, we'll create a new docker image with our setup script pre-loaded.
 
+First, in the root directory, build the kind-hooks image
+
+    docker build . -t kind-hooks 
+
 We'll create the following directory structure
 
     - kind-postgres
@@ -29,7 +33,7 @@ setup_postgres.sh
 
 Dockerfile
 
-    FROM snowbldr/kind-hooks
+    FROM kind-hooks
     COPY setup_postgres.sh /hooks/after_ready.sh
 
 Build the docker image
